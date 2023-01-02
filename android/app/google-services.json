@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "452763863056",
+    "project_id": "learn-flutter-suman",
+    "storage_bucket": "learn-flutter-suman.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:452763863056:android:c210c7941448f53e496295",
+        "android_client_info": {
+          "package_name": "com.example.learnfirebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "452763863056-7jk3og4tr04ijp3rie6t4vm0ivs3gc04.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNhJIifux1LLBZtQL7h6hq-RVs3F1M_hE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "452763863056-7jk3og4tr04ijp3rie6t4vm0ivs3gc04.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
