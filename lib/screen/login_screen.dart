@@ -1,12 +1,37 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:learnfirebase/screen/homescreen.dart';
 import 'package:learnfirebase/screen/register_screen.dart';
+import 'package:learnfirebase/services/auth_services.dart';
 
 import 'forgotpassword_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  String? errorMessage;
+
+  Future<void> logIn() async{
+    try{
+      await AuthServices().signIn(emailController.text, passwordController.text);
+
+
+    }
+    on FirebaseException catch(e){
+      setState(() {
+        errorMessage = e.message;
+      });
+
+    }
+    }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -54,7 +79,7 @@ class LoginScreen extends StatelessWidget {
                 child: Center(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 15.0),
-                    child: TextField(
+                    child: TextField(controller: emailController,
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Enter your email',
@@ -78,7 +103,7 @@ class LoginScreen extends StatelessWidget {
                 child: Center(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 15.0),
-                    child: TextField(
+                    child: TextField(controller: passwordController,
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Enter your password',
@@ -90,7 +115,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
             ),
-            //forgot password
+           
             Padding(
               padding: const EdgeInsets.only(left: 22.0, right: 30),
               child: Align(
@@ -107,21 +132,29 @@ class LoginScreen extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(25.0),
-              child: Container(
-                  height: 65,
-                  width: double.maxFinite,
-                  decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(15)),
-                  child: Center(
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  )),
+              child: InkWell(onTap: () async{
+               await logIn();
+               if(errorMessage != null){
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage!)));
+               }
+               
+              },
+                child: Container(
+                    height: 65,
+                    width: double.maxFinite,
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(15)),
+                    child: Center(
+                      child: Text(
+                        'Login',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 25,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    )),
+              ),
             ),
             Row(
               children: [
@@ -171,18 +204,23 @@ class LoginScreen extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 22.0, top: 20),
-                    child: Container(
-                      height: 70,
-                      width: 120,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(color: Colors.black, blurRadius: 1)
-                          ]),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SvgPicture.asset('asset/google.svg'),
+                    child: InkWell(
+                      onTap: () {
+                        AuthServices().logininwithgoogle();
+                      },
+                      child: Container(
+                        height: 70,
+                        width: 120,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(color: Colors.black, blurRadius: 1)
+                            ]),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SvgPicture.asset('asset/google.svg'),
+                        ),
                       ),
                     ),
                   ),

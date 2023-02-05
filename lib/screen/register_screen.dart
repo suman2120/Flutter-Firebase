@@ -1,8 +1,37 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:learnfirebase/screen/login_screen.dart';
-class RegisterScreen extends StatelessWidget {
+import 'package:learnfirebase/services/auth_services.dart';
+class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _confirmPasswordController = TextEditingController();
+  String? errorMessage;
+  
+  Future<void> register() async{
+    try{
+      await AuthServices().signUp(_emailController.text, _passwordController.text);
+
+
+    }
+    on FirebaseException catch(e){
+      setState(() {
+        errorMessage = e.message;
+      });
+
+    }
+    }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +78,7 @@ class RegisterScreen extends StatelessWidget {
                 child: Center(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 15.0),
-                    child: TextField(
+                    child: TextField(controller: _usernameController,
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Username',
@@ -73,7 +102,7 @@ class RegisterScreen extends StatelessWidget {
                 child: Center(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 15.0),
-                    child: TextField(
+                    child: TextField(controller: _emailController,
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Email',
@@ -97,7 +126,7 @@ class RegisterScreen extends StatelessWidget {
                 child: Center(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 15.0),
-                    child: TextField(
+                    child: TextField(controller: _passwordController,
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Password',
@@ -121,7 +150,7 @@ class RegisterScreen extends StatelessWidget {
                 child: Center(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 15.0),
-                    child: TextField(
+                    child: TextField(controller: _confirmPasswordController,
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Confirm Password',
@@ -137,21 +166,36 @@ class RegisterScreen extends StatelessWidget {
             
             Padding(
               padding: const EdgeInsets.all(25.0),
-              child: Container(
-                  height: 65,
-                  width: double.maxFinite,
-                  decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(15)),
-                  child: Center(
-                    child: Text(
-                      'Register',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  )),
+              child: InkWell(
+                onTap: () async{
+                  
+                  await register().then((value) => {
+                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Register Successful"))),
+                    Navigator.push(context, MaterialPageRoute(builder: ((context) {
+                      return const LoginScreen();
+                    })))
+                  });
+                  if(errorMessage != null){
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Unable to register because of ${errorMessage}")));
+                  }
+
+                },
+                child: Container(
+                    height: 65,
+                    width: double.maxFinite,
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(15)),
+                    child: Center(
+                      child: Text(
+                        'Register',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 25,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    )),
+              ),
             ),
             Row(
               children: [
